@@ -4,7 +4,8 @@ import {
     getItem, 
     addItem, 
     deleteItem, 
-    updateItem 
+    updateItem, 
+    addItemToWishlist
 } from "../controllers/item.js";
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.get("/:id", getItem);
 router.post("/", addItem);
 router.delete("/:id", deleteItem);
 router.put("/:id", updateItem);
+router.post("/wishlist", addItemToWishlist);
 
 export default router;

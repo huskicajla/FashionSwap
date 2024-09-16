@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async() => {
       try{
-        const res = await axios.get(`/items${cat}`);
+        const res = await axios.get(`http://localhost:8800/api/items${cat}`);
         setPost(res.data);
       } catch(err){
         console.log(err);
