@@ -1,4 +1,4 @@
-import {db} from "../connection.js";
+import { db } from "../connection.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -15,7 +15,7 @@ export const register = async (req, res) => {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
 
-        const query = "INSERT INTO users (`username`, `password`, `email`, `adress`, `phone_number`, `is_admin`, `is_active`) VALUES (?, ?, ?, ?, ?, '0', '1')";
+        const query = "INSERT INTO users (`username`, `password`, `email`, `address`, `phone_number`, `is_admin`, `is_active`) VALUES (?, ?, ?, ?, ?, '0', '1')";
 
         const values = [
             req.body.username,
@@ -27,39 +27,45 @@ export const register = async (req, res) => {
 
         db.query(query, values, (err, data) => {
             if (err) return res.status(500).json({ message: err });
-            return res.status(200).json("User created");
+
+            const token = jwt.sign({ id: data.insertId }, "jwtkey");
+
+            return res.status(200).json({ message: "User created", token });
         });
     });
 };
 
 
+
+
 export const login = async (req, res) => {
     const q = "SELECT * FROM users WHERE username = ?";
 
-    db.query(q, [req.body.username], (err, data) => {
-        if(err) return res.status(500).json(err);
-        if(data.length === 0) return res.status(404).json("User not found");
+    db.query(q, [req.body.username], async (err, data) => {
+        if (err) return res.status(500).json({ message: "Database error", error: err });
 
-        const isPasswordCorrect = bcrypt.compareSync(
-            req.body.password,
-            data[0].password
-        );
+        if (data.length === 0) return res.status(404).json({ message: "User not found" });
 
-        if(!isPasswordCorrect) return res.status(400).json("Password or username is incorrect");
+        if (data[0].is_active === "0") return res.status(401).json({ message: "User is not active. Please contact the admin." });
 
-        const token = jwt.sign({id: data[0].id}, "jwtkey");
-        const {password, ...other} = data[0];
+        const isPasswordCorrect = bcrypt.compareSync(req.body.password, data[0].password);
+        if (!isPasswordCorrect) return res.status(400).json({ message: "Password or username is incorrect" });
+
+        const token = jwt.sign({ id: data[0].id }, "jwtkey");
+
+        const { password, ...userData } = data[0];
 
         res.cookie("access_token", token, {
-                httpOnly: true,       
-                secure: process.env.NODE_ENV === "production",       
-                sameSite: "None",   
-                path: "/"
-            })
-                .status(200)
-                .json(other);
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "None",
+            path: "/"
+        })
+        .status(200)
+        .json(userData);
     });
 };
+
 
 export const logout = async (req, res) => {
     res.clearCookie("access_token", {

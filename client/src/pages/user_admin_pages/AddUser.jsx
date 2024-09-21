@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import Logo from '../img/logo.png';
+import './style/add_user_style.scss';
+import Logo from '../../img/logo.png';
 
 const Register = () => {
     const [inputs, setInputs] = useState({
@@ -22,10 +23,8 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8800/api/auth/register", inputs);
-            const { token } = response.data;
-            localStorage.setItem('token', token);
-            navigate("/login");
+            await axios.post("http://localhost:8800/api/auth/register", inputs);
+            navigate("/user/manage_users");
         } catch (err) {
             console.log(err);
             const errorMessage = err.response?.data?.message || 'An error occurred';
@@ -36,11 +35,11 @@ const Register = () => {
     return (
         <div className="login">
             <div className="logo">
-                <Link to="/">
-                    <img src={Logo} alt="" />
+                <Link to={"/user/manage_users"}>
+                <img src={Logo} alt="" />
                 </Link>
             </div>
-            <h2>Register</h2>
+            <h2>Add new user</h2>
             <form onSubmit={handleSubmit}>
                 <input 
                     required 
@@ -78,13 +77,9 @@ const Register = () => {
                     onChange={handleChange}
                 />
                 <button type="submit">
-                    Register
+                    Add User
                 </button>
                 {err && <p style={{ color: 'red' }}>{err}</p>}
-                <span>
-                    You have an account? 
-                    <Link to="/login">Login</Link>
-                </span>
             </form>
         </div>
     );

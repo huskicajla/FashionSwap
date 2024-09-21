@@ -85,15 +85,89 @@ export const updateItem = (req, res) => {
   };
   
 
-  export const addItemToWishlist = (req, res) => {
+  export const toggleItemInWishlist = (req, res) => {
     const userId = req.body.userId; 
     const itemId = req.body.itemId; 
-    
-    const q = "INSERT INTO wishlist (user_id, item_id) VALUES (?, ?)";
-    
-    db.query(q, [userId, itemId], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json("Item added to wishlist successfully!");
+  
+    console.log("Received userId:", userId, "Received itemId:", itemId);
+  
+    if (!userId || !itemId) {
+      return res.status(400).json({ error: "User ID and Item ID are required." });
+    }
+  
+    const checkQuery = "SELECT * FROM wishlist WHERE user_id = ? AND article_id = ?";
+  
+    db.query(checkQuery, [userId, itemId], (err, data) => {
+      if (err) {
+        console.error("Error checking wishlist:", err); 
+        return res.status(500).json({ error: "Failed to check wishlist." });
+      }
+  
+      if (data.length > 0) {
+        const deleteQuery = "DELETE FROM wishlist WHERE user_id = ? AND article_id = ?";
+        db.query(deleteQuery, [userId, itemId], (err, result) => {
+          if (err) {
+            console.error("Error deleting item from wishlist:", err); 
+            return res.status(500).json({ error: "Failed to remove item from wishlist." });
+          }
+          return res.status(200).json({
+            message: "Item removed from wishlist successfully!",
+          });
+        });
+      } else {
+        const insertQuery = "INSERT INTO wishlist (user_id, article_id) VALUES (?, ?)";
+        db.query(insertQuery, [userId, itemId], (err, result) => {
+          if (err) {
+            console.error("Error adding item to wishlist:", err); 
+            return res.status(500).json({ error: "Failed to add item to wishlist." });
+          }
+          return res.status(200).json({
+            message: "Item added to wishlist successfully!",
+          });
+        });
+      }
     });
   };
+  
+  export const isWishlisted = (req, res) => {
+    const { userId, postId } = req.params; 
+    const checkQuery = "SELECT * FROM wishlist WHERE user_id = ? AND article_id = ?";
+  
+    db.query(checkQuery, [userId, postId], (err, data) => {
+      if (err) {
+        console.error("Error checking wishlist:", err);
+        return res.status(500).json({ error: "Failed to check wishlist." });
+      }
+  
+      if (data.length > 0) {
+        return res.status(200).json({ isWishlisted: true });
+      } else {
+        return res.status(200).json({ isWishlisted: false });
+      }
+    });
+  };
+
+  export const getUserPosts = (req, res) => {
+    const userId = req.params.userId;
+  
+    const q = "SELECT * FROM articles WHERE user_id = ?;"; 
+    
+    db.query(q, [userId], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  };
+
+  export const getWishlist = (req, res) => {
+    const userId = req.params.userId;
+
+    const q = "SELECT a.id, a.name, u.username, a.quantity FROM articles a JOIN wishlist w ON a.id = w.article_id JOIN users u ON a.user_id = u.id WHERE w.user_id = ?;";
+
+    db.query(q, [userId], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+  };
+  
+
   

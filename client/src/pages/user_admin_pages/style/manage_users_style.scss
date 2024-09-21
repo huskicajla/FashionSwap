@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    margin-top: 0;
+    padding: 0;
+}
+
+.manage-users {
+    margin-top: -20px;
+    padding: 40px 20px;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.user{
+    margin-top: 10px;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #89c0eb;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user_details{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 85%;
+    text-align: center;
+
+    span {
+        width: 17%;
+        font-size: 18px;
+        text-align: left;
+
+        &:first-child {
+            width: 7%;
+            font-weight: bold;
+        }
+        
+        &:nth-child(2) {
+            width: 23%;
+        }
+    }
+    
+    
+}
+
+.user_actions {
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+        background-color: #ff5757;
+        margin-top: 0px;
+        margin-left: 10px;
+        color: black;
+        border: none;
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 150px;
+        transition: background-color 0.3s ease;  
+    
+        &:hover {
+            background-color: #ff3131;
+            cursor: pointer;
+          }
+        }
+}
+
+.add_user_btn {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px; 
+    margin-left: auto;
+    width: 200px;
+
+    button {
+        background-color: #ff5757; 
+        color: black;
+        padding: 14px 28px;
+        font-size: 16px; 
+        border: none;
+        border-radius: 8px; 
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+      }
+
+      button:hover {
+        background-color: #c52525; 
+        transform: scale(1.05); 
+      }
+  }

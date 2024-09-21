@@ -35,7 +35,7 @@ const Add = () => {
       const formData = new FormData();
       formData.append("file", file);
       const res = await axios.post("http://localhost:8800/api/upload", formData);
-      return res.data.path;  // Return only the path from the response
+      return res.data.path; 
     } catch (err) {
       console.error("Image upload error:", err);
       return "";
@@ -44,7 +44,11 @@ const Add = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const imgPath = await uploadImage();
+    let imgPath = state?.img || "";
+    
+    if (file) {
+      imgPath = await uploadImage();
+    }
   
     if (!currentUser || !currentUser.id) {
       window.alert("User ID not found. Please log in.");
@@ -78,6 +82,7 @@ const Add = () => {
       window.alert("Error submitting item: " + (err.response?.data?.message || err.message));
     }
   };
+  
   
 
   return (
@@ -132,14 +137,20 @@ const Add = () => {
 
         <div className="form-group">
           <label htmlFor="condition">Condition:</label>
-          <input
+          <select
             id="condition"
-            type="text"
-            className="form-input"
+            className="form-input select"
             value={condition}
             onChange={(e) => setCondition(e.target.value)}
             required
-          />
+          >
+            <option value="">Select Condition</option>
+            <option value="New">New</option>
+            <option value="Like new">Like new</option>
+            <option value="Good condition">Good condition</option>
+            <option value="Retro/vintage">Retro/vintage</option>
+            <option value="For repair or repurposing">For repair or repurposing</option>
+          </select>
         </div>
 
         <div className="form-group">

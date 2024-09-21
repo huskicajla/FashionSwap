@@ -6,7 +6,6 @@ const Footer = () => {
     <footer>
       <img src={Logo} alt="" />
       <span>2024 FashionSwap</span>
-      
     </footer>
   )
 }

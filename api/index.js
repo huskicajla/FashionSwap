@@ -3,6 +3,8 @@ import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import itemRoutes from "./routes/item.js";
 import userRoutes from "./routes/users.js";
+import reportsRoutes from "./routes/reports.js";
+import ordersRoutes from "./routes/orders.js";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 
@@ -36,6 +38,9 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/reports", reportsRoutes);
+app.use("/api/orders", ordersRoutes);
+
 
 app.listen(8800, () => {
     console.log('Server is running on port 8800');

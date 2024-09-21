@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
+import Logo from "../img/logo.png";
 
 const Login = () => {
     const [inputs, setInputs] = useState({
@@ -28,6 +29,11 @@ const Login = () => {
 
     return (
         <div className='login'>
+            <div className="logo">
+                <Link to="/">
+                    <img src={Logo} alt="" />
+                </Link>
+            </div>
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <input 
