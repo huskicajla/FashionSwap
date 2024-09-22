@@ -56,7 +56,7 @@ const Orders = () => {
                         <div className="order" key={order.id}>
                             <div className="order-details">
                                 <span>{new Date(order.order_date).toLocaleDateString()}</span>
-                                <span>{order.total_price}</span>
+                                <span>${order.total_price}</span>
                                 <span>{order.status}</span>
                             </div>
                             <div className="post-actions">
